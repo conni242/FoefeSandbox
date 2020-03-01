@@ -44,6 +44,28 @@ export default class Anmeldeformular extends LightningElement {
 
     /*****************************************************************************************************************************************************************************
         * 
+        * Render Lifecycle functions
+        * 
+        ******************************************************************************************************************************************************************************/
+
+
+    get selectedDivValues() { 
+        return [(this.selectedCamp)?this.selectedCamp.Id:null, this.selectedPrice, this.selectedType, this.gender, this.travelStartLocation, this.isSwimmer, this.shippingDocuments]; 
+    }
+    renderedCallback() { 
+        let elements = this.template.querySelectorAll(`*[data-value]`); 
+        if(elements) { 
+            for (let elm of elements) { 
+                if (this.selectedDivValues.includes(elm.dataset.value)) { 
+                    elm.classList.add("c-selected"); 
+                }
+            }
+        } 
+    }
+
+
+    /*****************************************************************************************************************************************************************************
+        * 
         * Load data from Salesforce 
         * 
         ******************************************************************************************************************************************************************************/
@@ -127,9 +149,11 @@ export default class Anmeldeformular extends LightningElement {
        * Category functions 
        * 
        ******************************************************************************************************************************************************************************/
-    get showCategory() {
+    get showCategory() { 
+
         return (this.step === 0);
     }
+
     get hasCategory() {
         let response = false;
         if (this.selectedType) {
@@ -170,11 +194,12 @@ export default class Anmeldeformular extends LightningElement {
         }
         return response;
     }
+
     setCamp(event) {
         let status = event.currentTarget.getAttribute("data-status");
         if (status != "Ausgebucht" && status != "Bald wieder verfügbar") {
             this.selectedCamp = this.camplist.find(camp => camp.Id == event.currentTarget.getAttribute("data-value"));
-            console.log(this.selectedCamp)
+            console.log(this.selectedCamp.Id); 
             this.selectedPrice = null;
             this.updateBoxStyle(event, ".z-camp", true);
             this.updateBoxStyle(event, ".z-price", false);
@@ -457,6 +482,9 @@ export default class Anmeldeformular extends LightningElement {
             this.step = (this.step == 6 && !this.selectedCamp.Ausweisdaten_erforderlich__c) ? this.step - 2 : this.step - 1;
         }
         this.navigateBackVisibilty();
+      
+           
+        
     }
     navigateForward() {
         if (this.isValidStep(this.step)) {
