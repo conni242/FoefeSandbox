@@ -1,0 +1,127 @@
+.body {
+    width: 100%; 
+    user-select: none;
+    font-family:sans-serif;
+    -ms-text-size-adjust:100%;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust: 100%;
+    font-family:"Salesforce Sans", Arial, sans-serif;
+    font-size:0.8125rem;
+}
+.campCard {
+    border: 2px solid #20364a;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: white; 
+    cursor: pointer; 
+    min-width: min-content;
+}
+.agbText {
+    border: 2px solid #20364a;
+    box-sizing: border-box;
+    background-color: white;
+    height: 300px; 
+    overflow-y: auto; 
+}
+.forceHover{
+    background-color: #DCE0E3; 
+    border: 2px solid #DCE0E3; 
+    color: black!important; 
+}
+
+.campCard:hover {
+    background-color: #DCE0E3; 
+    border: 2px solid #DCE0E3; 
+    color: black;
+}
+.campCard[data-status="Ausgebucht"] {
+    border-color:#d83f3c; 
+    opacity: 0.6; 
+}
+.campCard[data-status="Ausgebucht"]:hover {
+    border-color:#d83f3c; 
+    opacity: 0.6; 
+    background-color: white; 
+}
+.campCard[data-status="Bald wieder verfügbar"] {
+    border-color:#54C473; 
+    opacity: 0.6; 
+}
+.campCard[data-status="Bald wieder verfügbar"]:hover {
+    border-color:#54C473; 
+    opacity: 0.6; 
+    background-color: white; 
+}
+.c-selected {
+    background-color: #20364a; 
+    border: 2px solid #20364a; 
+    color: white;
+    box-sizing: border-box;
+}
+.c-selected h1 {
+    color: white; 
+}
+.c-selected:hover {
+    background-color: #20364a; 
+    border: 2px solid #20364a; 
+    color: white;
+    box-sizing: border-box;
+}
+
+.c-bold {
+    font-weight: bold;
+}
+.c-text[data-status="Ausgebucht"] {
+    color: #d83f3c!important; 
+}
+.c-text[data-status="nur noch wenige Plätze"] {
+    color:  #F88962!important; 
+}
+.c-text[data-status="Bald wieder verfügbar"] {
+    color:  #54C473!important; 
+}
+input, textarea {
+    background-color: #DCE0E3;
+    color: 20364A;
+
+    border-color: 20364A; 
+    border-style: none;
+    min-width: 100%; 
+    max-width: 100%;
+    min-height: 40px; 
+    font-size: 18px; 
+    padding: 6px 12px 6px 12px; 
+    font-family:"Salesforce Sans", Arial, sans-serif;
+    }
+    input:focus, input:valid, textarea:focus, textarea:valid { 
+        background-color: white; 
+        outline: none; 
+    border: 2px solid #20364a;
+    
+    }
+ 
+    textarea {
+        border-width: 2px;
+    }
+    label.inputLabel {
+        font-size: 14px; 
+        
+    font-family:"Salesforce Sans", Arial, sans-serif;
+    font-weight:700;
+        line-height: 1.5; 
+        padding-left: 8px; 
+    }
+    label.inputLabelLong {
+        padding-left: 0px!important;
+    }
+    .c-navbutton {
+        min-width: max-content;
+        border: 2px solid #20364a;
+        box-sizing: border-box;
+        background-color: white; 
+        cursor: pointer; 
+    }
+    .c-navbutton.c-fadedNav {
+        opacity: 0.4;
+        cursor: default;
+    }

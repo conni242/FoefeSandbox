@@ -1,0 +1,515 @@
+<template>
+
+    <!-- Kategorie Camps -->
+    <div class=" category-section">
+        <template if:true={showCategory}>
+        <div class="slds-p-around--large body">
+            <h1 class="slds-text-align--center slds-text-heading--medium slds-p-vertical--medium c-bold slds">Wofür
+                möchtest du dich anmelden?
+                <template if:true={hasCategory}> &nbsp;<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 3 24 24"
+                        width="1em">
+                        <path fill="#54C473"
+                            d="M8.8 20.1l-7.6-7.6c-.3-.3-.3-.8 0-1.1l1-1c.2-.2.7-.2 1 0l5.7 5.8c.2.2.5.2.7 0L20.8 4.9c.3-.3.8-.3 1 0l1 1c.3.3.3.7 0 1l-13 13.2c-.3.3-.8.3-1 0z">
+                        </path>
+                    </svg></template></h1>
+            <lightning-layout multiple-rows=true horizontal-align="center">
+                <template for:each={campTypes} for:item="campTyp">
+                    <lightning-layout-item key={campTyp} padding="around-small"  size=12 small-device-size=12 large-device-size=4 medium-device-size=12>
+                        <div class="campCard slds-p-around--x-large z-category" data-value={campTyp}
+                            onclick={setCategory}>
+                            <h2 class="slds-text-align--center slds-text-heading--medium c-bold">{campTyp}</h2>
+                        </div>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+        </div>
+    </template>
+    </div>
+
+    <!-- Relevant Camps-->
+    <div class="camp-section">
+        <template if:true={showCamps}>
+            <div class="slds-p-around--large body">
+                <h1 class="slds-text-align--center slds-text-heading--medium slds-p-vertical--medium c-bold slds">
+                    Welches Camp?
+                    <template if:true={hasCamp}> &nbsp;<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 3 24 24"
+                            width="1em">
+                            <path fill="#54C473"
+                                d="M8.8 20.1l-7.6-7.6c-.3-.3-.3-.8 0-1.1l1-1c.2-.2.7-.2 1 0l5.7 5.8c.2.2.5.2.7 0L20.8 4.9c.3-.3.8-.3 1 0l1 1c.3.3.3.7 0 1l-13 13.2c-.3.3-.8.3-1 0z">
+                            </path>
+                        </svg></template></h1>
+                <lightning-layout multiple-rows=true horizontal-align="center">
+                    <template for:each={filteredCampList} for:item="camp">
+                        <lightning-layout-item key={camp.Id} padding="around-small"  size=12 small-device-size=12 large-device-size=4 medium-device-size=12>
+                            <div class="campCard slds-p-horizontal--large slds-p-top--small slds-p-bottom--xx-small z-camp"
+                                data-status={camp.Status} data-value={camp.Id} onclick={setCamp}>
+                                <h2 class="slds-text-align--center slds-text-heading--medium c-bold">{camp.Name}</h2>
+                                <h3 class="slds-text-align--center slds-p-top--xx-small  slds-text-body_small">
+                                    {camp.DateTimeFrameString__c}</h3>
+                                <p class="slds-text-align--center slds-p-top--x-small c-bold slds-p-bottom--xx-small slds-text-body_small c-text"
+                                    data-status={camp.Status}>{camp.Status}!</p>
+                            </div>
+                        </lightning-layout-item>
+                    </template>
+                </lightning-layout>
+            </div>
+        </template>
+    </div>
+
+    <!-- Prices -->
+    <div class="price-section">
+        <template if:true={showPrices}>
+            <div class="slds-p-around--large body ">
+                <h1 class="slds-text-align--center slds-text-heading--medium slds-p-vertical--medium c-bold">Welchen
+                    Preis möchtest du zahlen?
+                    <template if:true={hasPrice}> &nbsp;<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 3 24 24"
+                            width="1em">
+                            <path fill="#54C473"
+                                d="M8.8 20.1l-7.6-7.6c-.3-.3-.3-.8 0-1.1l1-1c.2-.2.7-.2 1 0l5.7 5.8c.2.2.5.2.7 0L20.8 4.9c.3-.3.8-.3 1 0l1 1c.3.3.3.7 0 1l-13 13.2c-.3.3-.8.3-1 0z">
+                            </path>
+                        </svg></template></h1>
+                <lightning-layout multiple-rows=true horizontal-align="center">
+                    <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=4 medium-device-size=12>
+                        <div class="campCard slds-p-horizontal--large slds-p-top--small slds-p-bottom--xx-small z-price"
+                            data-value="Ermäßigter Preis" onclick={setPrice}>
+                            <h2 class="slds-text-align--center slds-text-heading--medium c-bold">Ermäßigter Preis</h2>
+                            <h3 class="slds-text-align--center slds-p-top--xx-small c-bold slds-text-heading--large">
+                                {discountedPrice}€</h3>
+                            <p
+                                class="slds-text-align--center slds-p-top--x-small c-bold slds-p-bottom--xx-small slds-text-body_small c-text">
+                                Falls du sonst nicht genug Geld für die Freizeit zusammen bekommst. <br>Wir kontaktieren
+                                dich, um dir das weitere Vorgehen zu erläutern.</p>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=4 medium-device-size=12>
+                        <div class="campCard slds-p-horizontal--large slds-p-top--small slds-p-bottom--xx-small z-price"
+                            data-value="Normalpreis" onclick={setPrice}>
+                            <h2 class="slds-text-align--center slds-text-heading--medium c-bold">Normalpreis</h2>
+                            <h3 class="slds-text-align--center slds-p-top--xx-small c-bold slds-text-heading--large">
+                                {regularPrice}€</h3>
+                            <p
+                                class="slds-text-align--center slds-p-top--x-small c-bold slds-p-bottom--xx-small slds-text-body_small c-text">
+                                Hier zahlst du den kostendeckenden Preis, <br>ohne Beteiligung an Investitionen und
+                                Ermäßigungen für Geringverdiener.</p>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=4 medium-device-size=12>
+                        <div class="campCard slds-p-horizontal--large slds-p-top--small slds-p-bottom--xx-small z-price"
+                            data-value="Unterstützerpreis" onclick={setPrice}>
+                            <h2 class="slds-text-align--center slds-text-heading--medium c-bold">Unterstützerpreis</h2>
+                            <h3 class="slds-text-align--center slds-p-top--xx-small c-bold slds-text-heading--large">
+                                {supporterPrice}€</h3>
+                            <p
+                                class="slds-text-align--center slds-p-top--x-small c-bold slds-p-bottom--xx-small slds-text-body_small c-text">
+                                Mit diesem Preis ermöglichst du dem FöFe neue Zelte <br>und anderes wichtiges Material
+                                zu kaufen, sowie einen ermäßigten Preis anzubieten.</p>
+                        </div>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </template>
+    </div>
+
+    <!-- Abfahrt Section -->
+    <div class=" startlocation-section">
+        <template if:true={showStartLocation}>
+            <div class="slds-p-around--large body">
+                <h1 class="slds-text-align--center slds-text-heading--medium slds-p-vertical--medium c-bold slds">
+                    Von welchem Abfahrtsort möchtet ihr die Reise starten? 
+                    <template if:true={hasStartLocation}> &nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 3 24 24" width="1em">
+                            <path fill="#54C473"
+                                d="M8.8 20.1l-7.6-7.6c-.3-.3-.3-.8 0-1.1l1-1c.2-.2.7-.2 1 0l5.7 5.8c.2.2.5.2.7 0L20.8 4.9c.3-.3.8-.3 1 0l1 1c.3.3.3.7 0 1l-13 13.2c-.3.3-.8.3-1 0z">
+                            </path>
+                        </svg></template></h1>
+                <lightning-layout multiple-rows=true horizontal-align="center">
+                    <template for:each={startLocationOptionList} for:item="startlocation">
+                        <lightning-layout-item key={startlocation} padding="around-small" size=12 small-device-size=12 large-device-size=4 medium-device-size=12>
+                            <div class="campCard slds-p-around--x-large z-startlocation" data-value={startlocation}
+                                onclick={setStartLocation}>
+                                <h2 class="slds-text-align--center slds-text-heading--medium c-bold">{startlocation}
+                                </h2>
+                            </div>
+                        </lightning-layout-item>
+                    </template>
+                </lightning-layout>
+            </div>
+        </template>
+    </div>
+
+
+    <!-- Teilnehmer Section -->
+    <div class=" participant-section">
+        <template if:true={showParticipant}>
+            <div class="slds-p-around--large body">
+                <h1 class="slds-text-align--center slds-text-heading--medium slds-p-vertical--medium c-bold slds">Nun
+                    zum Teilnehmer:
+                    <template if:true={hasParticipant}> &nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 3 24 24" width="1em">
+                            <path fill="#54C473"
+                                d="M8.8 20.1l-7.6-7.6c-.3-.3-.3-.8 0-1.1l1-1c.2-.2.7-.2 1 0l5.7 5.8c.2.2.5.2.7 0L20.8 4.9c.3-.3.8-.3 1 0l1 1c.3.3.3.7 0 1l-13 13.2c-.3.3-.8.3-1 0z">
+                            </path>
+                        </svg></template></h1>
+                <lightning-layout multiple-rows=true horizontal-align="center">
+                    <lightning-layout-item  size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="firstName" class="inputLabel">Vorname Teilnehmer*in</label></br>
+                        <input name="firstName" value={firstName} type="text" class="inputCs" required oninput={setFirstName}>
+                    </lightning-layout-item>
+                    <lightning-layout-item  size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="lastName" class="inputLabel">Nachname Teilnehmer*in</label></br>
+                        <input name="lastName" value={lastName} type="text" class="inputCs" required oninput={setLastName}>
+                    </lightning-layout-item>
+                    <lightning-layout-item   size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="gender" class="inputLabel">Geschlecht Teilnehmer*in</label>
+                        <lightning-layout horizontal-align="spread" multiple-rows=true>
+
+                            <lightning-layout-item  padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-gender"
+                                    data-value="Männlich" onclick={setGender}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Männlich</h2>
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-gender"
+                                    data-value="Weiblich" onclick={setGender}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Weiblich</h2>
+                                </div>
+                            </lightning-layout-item>
+
+                        </lightning-layout>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="birthdate" class="inputLabel">Geburtsdatum Teilnehmer*in</label></br>
+                        <input name="birthdate" type="date" value={birthdate} class="inputCs" required oninput={setBirthdate}  min="1930-01-01" max="2050-12-31">
+                    </lightning-layout-item>
+
+                </lightning-layout>
+            </div>
+        </template>
+    </div>
+
+    <!-- Ferry Section -->
+    <div class=" ferry-section">
+        <template if:true={showFerry}>
+            <div class="slds-p-around--large body">
+                <h1 class="slds-text-align--center slds-text-heading--medium slds-p-vertical--medium c-bold">Für die
+                    Fährtickets brauchen wir noch weitere Informationen:
+                    <template if:true={hasFerry}> &nbsp;<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 3 24 24"
+                            width="1em">
+                            <path fill="#54C473"
+                                d="M8.8 20.1l-7.6-7.6c-.3-.3-.3-.8 0-1.1l1-1c.2-.2.7-.2 1 0l5.7 5.8c.2.2.5.2.7 0L20.8 4.9c.3-.3.8-.3 1 0l1 1c.3.3.3.7 0 1l-13 13.2c-.3.3-.8.3-1 0z">
+                            </path>
+                        </svg></template></h1>
+                <lightning-layout multiple-rows=true horizontal-align="center">
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="nationality" class="inputLabel">Nationalität Teilnehmer*in</label></br>
+                        <input name="nationality" value={nationality} type="text" class="inputCs" required oninput={setNationality}>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="birthLocation" class="inputLabel">Geburtsort Teilnehmer*in</label></br>
+                        <input name="birthLocation" value={placeOfBirth} type="text" class="inputCs" required oninput={setBirthLocation}>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=12 medium-device-size=12
+                        padding="around-small">
+                        <label for="passportNumber" class="inputLabel">Ausweisnummer Teilnehmer*in (Bitte denselben
+                            Ausweis für die Fähre einpacken!)</label></br>
+                        <input name="passportNumber" value={passportNumber} type="text" class="inputCs" required oninput={setPassportNumber}>
+                    </lightning-layout-item>
+
+                </lightning-layout>
+            </div>
+        </template>
+    </div>
+    <!-- Parent Section -->
+    <div class=" parent-section">
+        <template if:true={showParent}>
+            <div class="slds-p-around--large body">
+                <h1 class="slds-text-align--center slds-text-heading--medium slds-p-vertical--medium c-bold">Daten
+                    zur/zum Erziehungsberechtigten:
+                    <template if:true={hasParent}> &nbsp;<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 3 24 24"
+                            width="1em">
+                            <path fill="#54C473"
+                                d="M8.8 20.1l-7.6-7.6c-.3-.3-.3-.8 0-1.1l1-1c.2-.2.7-.2 1 0l5.7 5.8c.2.2.5.2.7 0L20.8 4.9c.3-.3.8-.3 1 0l1 1c.3.3.3.7 0 1l-13 13.2c-.3.3-.8.3-1 0z">
+                            </path>
+                        </svg></template></h1>
+
+                <lightning-layout multiple-rows=true horizontal-align="center">
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="parentFirstName" class="inputLabel">Vorname Erziehungsberechtige*r</label></br>
+                        <input name="parentFirstName" value={firstNameParent} type="text" class="inputCs" required oninput={setParentFirstName}>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="parentLastName" class="inputLabel">Nachname Erziehungsberechtige*r</label></br>
+                        <input name="parentLastName" value={lastNameParent} type="text" class="inputCs" required oninput={setParentLastName}>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="parentStreet" class="inputLabel">Straße, Hausnummer</label></br>
+                        <input name="parentStreet" value={addressStreet} type="text" class="inputCs" required oninput={setParentStreet}>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="parentPostalCode" class="inputLabel">Postleitzahl</label></br>
+                        <input name="parentPostalCode" value={addressPostalCode} type="text" class="inputCs" required
+                            oninput={setParentPostalCode}>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="parentCity" class="inputLabel">Stadt</label></br>
+                        <input name="parentCity" value={addressCity} type="text" class="inputCs" required oninput={setParentCity}>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="parentCountry" class="inputLabel">Land</label></br>
+                        <input name="parentCountry" value={addressCountry} type="text" class="inputCs" required oninput={setParentCountry}>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=12 medium-device-size=12
+                        padding="around-small">
+                        <label for="parentDistrict" class="inputLabel">Landkreis ( z.B. Lörrach,
+                            Hochschwarzwald,...)</label></br>
+                        <input name="parentDistrict"  value={landkreis} type="text" class="inputCs" required oninput={setParentDistrict}>
+                    </lightning-layout-item>
+
+                </lightning-layout>
+            </div>
+        </template>
+    </div>
+
+    <!-- Contact Section -->
+    <div class=" contact-section">
+        <template if:true={showContact}>
+            <div class="slds-p-around--large body">
+                <h1 class="slds-text-align--center slds-text-heading--medium slds-p-vertical--medium c-bold">Wie können
+                    wir euch erreichen?
+                    <template if:true={hasContact}> &nbsp;<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 3 24 24"
+                            width="1em">
+                            <path fill="#54C473"
+                                d="M8.8 20.1l-7.6-7.6c-.3-.3-.3-.8 0-1.1l1-1c.2-.2.7-.2 1 0l5.7 5.8c.2.2.5.2.7 0L20.8 4.9c.3-.3.8-.3 1 0l1 1c.3.3.3.7 0 1l-13 13.2c-.3.3-.8.3-1 0z">
+                            </path>
+                        </svg></template></h1>
+                <lightning-layout multiple-rows=true horizontal-align="center">
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=12 medium-device-size=12
+                        padding="around-small">
+                        <label for="email" class="inputLabel">E-Mail Adresse</label></br>
+                        <input name="email" value={email}  type="email" class="inputCs mailInput" required oninput={setEmail}>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="phone" class="inputLabel">Telefonnummer (Format: +491234.....)</label></br>
+                        <input name="phone" value={phone} type="text" class="inputCs" required oninput={setPhone}>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                        padding="around-small">
+                        <label for="mobilePhone" class="inputLabel">Handynummer (Format: +491234.....)</label></br>
+                        <input name="mobilePhone" value={mobil} type="text" class="inputCs" required oninput={setMobilePhone}>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </template>
+    </div>
+
+    <!-- comment Section -->
+    <div class="comment-section">
+        <template if:true={showComment}>
+            <div class="slds-p-around--large body">
+                <h1 class="slds-text-align--center slds-text-heading--medium slds-p-vertical--medium c-bold">Fast
+                    fertig! Auf was müssen wir noch achten?
+                    <template if:true={hasComment}> &nbsp;<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 3 24 24"
+                            width="1em">
+                            <path fill="#54C473"
+                                d="M8.8 20.1l-7.6-7.6c-.3-.3-.3-.8 0-1.1l1-1c.2-.2.7-.2 1 0l5.7 5.8c.2.2.5.2.7 0L20.8 4.9c.3-.3.8-.3 1 0l1 1c.3.3.3.7 0 1l-13 13.2c-.3.3-.8.3-1 0z">
+                            </path>
+                        </svg></template></h1>
+                <lightning-layout multiple-rows=true horizontal-align="center">
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=12 medium-device-size=12
+                        padding="around-small">
+                        <label for="comments" class="inputLabel">Besonderheiten (Allergien, Medizinische Besonderheiten,
+                            Unverträglichkeiten, Ernährung, etc.)</label></br>
+                        <textarea class="comments" id="comments" rows="4" cols="150" oninput={setComments}>{comments}</textarea>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=12 medium-device-size=12
+                        padding="around-small">
+                        <label for="swim" class="inputLabel">Teilnehmer kann schwimmen:</label>
+                        <lightning-layout horizontal-align="spread" multiple-rows=true>
+                            <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-swim slds-m-right--xx-small"
+                                    data-value=true onclick={setSwim}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Ja</h2>
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-swim slds-m-left--xx-small"
+                                    data-value=false onclick={setSwim}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Nichtschwimmer
+                                    </h2>
+                                </div>
+                            </lightning-layout-item>
+
+                        </lightning-layout>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=12 medium-device-size=12
+                        padding="around-small">
+                        <label for="documents" class="inputLabel">Versandart der Dokumente</label>
+                        <lightning-layout horizontal-align="spread" multiple-rows=true>
+
+                            <lightning-layout-item  padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-document"
+                                    data-value="E-Mail" onclick={setDocument}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Umweltfreundlich
+                                        per E-Mail</h2>
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item  padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-document"
+                                    data-value="Post" onclick={setDocument}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Per Post</h2>
+                                </div>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </template>
+    </div>
+
+    <!-- submit Section -->
+    <div class="submit-section">
+        <template if:true={showSubmit}>
+            <div class="slds-p-around--large body">
+                <h1 class="slds-text-align--center slds-text-heading--medium slds-p-vertical--medium c-bold">Allgemeine Geschäftsbedingungen und Datenschutz:</h1>
+                <lightning-layout multiple-rows=true horizontal-align="center">
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=12 medium-device-size=12
+                        padding="around-small">
+                        <label for="agb" class="inputLabel inputLabelLong">Ich habe die <a
+                            href="https://foefe.de/agb" target="_blank"
+                            title="Datenschutzerlärung" alt="zur Datenschutzerklärung">Allgemeinen Geschäftsbedingungen</a> gelesen und akzeptiere diese.</label>
+                        <lightning-layout horizontal-align="spread" multiple-rows=true>
+                            <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-agb"
+                                    data-value=true onclick={setAgb}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Akzeptieren</h2>
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-agb"
+                                    data-value=false onclick={setAgb}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Nicht Akzeptieren
+                                    </h2>
+                                </div>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=12 medium-device-size=12
+                        padding="around-small">
+                        <label for="privacy" class="inputLabel inputLabelLong">Ich habe die <a
+                                href="https://foefe.de/datenschutzerklaerung" target="_blank"
+                                title="Datenschutzerlärung" alt="zur Datenschutzerklärung">Datenschutzerklärung</a> zur
+                            Kenntnis genommen und bin damit einverstanden, dass die von mir angegebenen Daten
+                            elektronisch erhoben und gespeichert werden.</label>
+                        <lightning-layout horizontal-align="spread" multiple-rows=true>
+
+                            <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-privacy"
+                                    data-value=true onclick={setPrivacy}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Einverstanden</h2>
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-privacy" 
+                                    data-value=false onclick={setPrivacy}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Nicht
+                                        Einverstanden</h2>
+                                </div>
+                            </lightning-layout-item>
+
+                        </lightning-layout>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 small-device-size=12 large-device-size=12 medium-device-size=12
+                        padding="around-small">
+                        <label for="form" class="inputLabel inputLabelLong">Ich habe das <a
+                                href="https://foefe.de/wp-content/uploads/19_Musterformblatt-Pauschalreise-des-FöFe-3.pdf"
+                                target="_blank"
+                                title="Formblatt zur Unterrichtung des Reisenden bei einer Pauschalreise"
+                                alt="Formblatt zur Unterrichtung des Reisenden bei einer Pauschalreise">Formblatt</a> zur Unterrichtung des Reisenden bei einer Pauschalreise gelesen.</label>
+                        <lightning-layout horizontal-align="spread" multiple-rows=true>
+
+                            <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-formblatt"
+                                    data-value=true onclick={setFormblatt}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Bestätigen</h2>
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small" size=12 small-device-size=12 large-device-size=6 medium-device-size=12>
+                                <div class="campCard forceHover slds-p-around--x-small  z-formblatt"
+                                    data-value=false onclick={setFormblatt}>
+                                    <h2 class="slds-text-align--center slds-text-body--medium c-bold">Nicht
+                                        Bestätigen</h2>
+                                </div>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <div class=" slds-p-around--x-small c-navbutton"
+                onclick={saveToSalesforce}>
+                <h2 class="slds-text-align--center slds-text-heading--small  c-bold">Absenden
+                </h2>
+            </div>
+            </div>
+        </template>
+    </div>
+
+    <!-- Final Screen -->
+    <div class="final-section">
+     <template if:true={showFinal}>
+        <div class="slds-p-around--large body">
+            <lightning-layout multiple-rows=true horizontal-align="center">
+                <lightning-layout-item size=12 small-device-size=12 large-device-size=6 medium-device-size=12
+                padding="around-small">
+                <div class=" slds-p-around--x-small c-navbutton"
+                onclick={saveToSalesforce}>
+                <h2 class="slds-text-align--center slds-text-heading--small  c-bold">Absenden
+                </h2>
+            </div>
+        </lightning-layout-item>
+            </lightning-layout> 
+        </div></template>
+</div>
+
+    <!-- transition Section -->
+    <div class="transition-section">
+        <div class="slds-p-around--large body">
+            <lightning-layout multiple-rows=true horizontal-align="center">
+                <lightning-layout-item size=6 small-device-size=6 large-device-size=3 medium-device-size=4
+                    padding="around-small">
+                    <div class=" slds-p-around--x-small c-navbutton c-navBack  c-fadedNav"
+                    onclick={navigateBack}>
+                    <h2 class="slds-text-align--center slds-text-heading--small c-bold ">Zurück
+                    </h2>
+                </div>
+                </lightning-layout-item>
+                <lightning-layout-item size=6 small-device-size=6 large-device-size=3 medium-device-size=4
+                padding="around-small">
+                <div class=" slds-p-around--x-small c-navbutton  c-navForward  c-fadedNav"
+                onclick={navigateForward}>
+                <h2 class="slds-text-align--center slds-text-heading--small  c-bold">Weiter
+                </h2>
+            </div>
+            </lightning-layout-item>
+
+            </lightning-layout> 
+           
+        </div>
+</div>
+
+
+
+</template>
